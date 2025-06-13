@@ -1,21 +1,25 @@
 subjects: /data/test-subjects.ttl
 sources:
   # Protocol spec & manifest (latest published version)
-  - https://solidproject.org/TR/protocol
-  - https://github.com/solid-contrib/specification-tests/blob/main/protocol/solid-protocol-test-manifest.ttl
-  - https://github.com/solid-contrib/specification-tests/blob/main/protocol/requirement-comments.ttl
+  # - https://solidproject.org/TR/protocol
+  # - https://github.com/solid-contrib/specification-tests/blob/main/protocol/solid-protocol-test-manifest.ttl
+  # - https://github.com/solid-contrib/specification-tests/blob/main/protocol/requirement-comments.ttl
 
   # WAC spec & manifest (latest published version)
-  - https://solidproject.org/TR/wac
-  - https://github.com/solid-contrib/specification-tests/blob/main/web-access-control/web-access-control-test-manifest.ttl
-  - https://github.com/solid-contrib/specification-tests/blob/main/web-access-control/requirement-comments.ttl
+  # - https://solidproject.org/TR/wac
+  # - https://github.com/solid-contrib/specification-tests/blob/main/web-access-control/web-access-control-test-manifest.ttl
+  # - https://github.com/solid-contrib/specification-tests/blob/main/web-access-control/requirement-comments.ttl
+
+  # SAI
+  - https://solidproject.org/TR/protocol
+  - https://github.com/solid-contrib/specification-tests/blob/main/sai/sai-manifest.ttl
 
   # This is an example of how you could run tests for a specific version of a specification
 #  - https://solidproject.org/TR/2021/wac-20210711
 #  - https://github.com/solid-contrib/specification-tests/blob/main/web-access-control/web-access-control-test-manifest-20210711.ttl
 
   # Link old tests to new spec temporarily
-  - https://github.com/solid-contrib/specification-tests/blob/main/web-access-control/wac-spec-additions.ttl
+  # - https://github.com/solid-contrib/specification-tests/blob/main/web-access-control/wac-spec-additions.ttl
 
   # Include unlinked additional tests
 #  - https://github.com/solid-contrib/specification-tests/blob/main/protocol/converted.ttl

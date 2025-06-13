@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script runs tests on the given target server but has options to use the
 # published test harness docker image or a local image, and the option to run
@@ -14,7 +14,7 @@
 # See below for assumptions made when running CSS
 
 display_usage() {
-  cat << EOF
+  cat <<EOF
 Usage: ./run.sh [-d testdir] [-l] [-e <envfile>] [-t <list>] <subject> [args]
   -d <testdir> Use local development version of tests in specified location
   -l           Use local docker image of test harness (called testharness)
@@ -27,7 +27,7 @@ EOF
 
 setup_css() {
   mkdir -p config
-  cat > ./config/css-config.json <<EOF
+  cat >./config/css-config.json <<EOF
 {
   "@context": "https://linkedsoftwaredependencies.org/bundles/npm/@solid/community-server/^7.0.0/components/context.jsonld",
   "import": [
@@ -93,7 +93,7 @@ EOF
 
   echo 'Creating client credentials'
   cp css.env css-creds.env
-  NODE_TLS_REJECT_UNAUTHORIZED=0 node createCredentials.js https://server >> css-creds.env
+  NODE_TLS_REJECT_UNAUTHORIZED=0 node createCredentials.js https://server >>css-creds.env
 }
 
 stop_css() {
@@ -111,8 +111,7 @@ setup_config() {
 }
 
 # if no arguments supplied, display usage
-if [ $# -lt 1 ]
-then
+if [ $# -lt 1 ]; then
   display_usage
   exit 1
 fi
@@ -126,34 +125,32 @@ harnessargs=('--output=/reports')
 # the 'target' directory is used by Karate for it's own format reports which can be helpful in development
 while getopts "lhd:e:t:" arg; do
   case $arg in
-    d)
-      testDir="$(cd "${OPTARG}" && pwd)"
-      setup_config
-      outdir='local'
-      dockerargs+=('-v' "$testDir/:/data" '-v' "$cwd/config:/app/config" '-v' "$cwd/target:/app/target")
-      ;;
-    l)
-      outdir='local'
-      dockerargs+=('-v' "$cwd/target:/app/target")
-      dockerimage='testharness'
-      ;;
-    e)
-      envfile="${OPTARG}"
-      ;;
-    t)
-      dockerargs+=('-v' "$cwd/${OPTARG}:/app/target/tolerable-failures.txt")
-      harnessargs+=('--tolerable-failures=/app/target/tolerable-failures.txt')
-      ;;
-    *)
-      ;;
+  d)
+    testDir="$(cd "${OPTARG}" && pwd)"
+    setup_config
+    outdir='local'
+    dockerargs+=('-v' "$testDir/:/data" '-v' "$cwd/config:/app/config" '-v' "$cwd/target:/app/target")
+    ;;
+  l)
+    outdir='local'
+    dockerargs+=('-v' "$cwd/target:/app/target")
+    dockerimage='testharness'
+    ;;
+  e)
+    envfile="${OPTARG}"
+    ;;
+  t)
+    dockerargs+=('-v' "$cwd/${OPTARG}:/app/target/tolerable-failures.txt")
+    harnessargs+=('--tolerable-failures=/app/target/tolerable-failures.txt')
+    ;;
+  *) ;;
   esac
 done
 
-shift $((OPTIND-1))
+shift $((OPTIND - 1))
 
 # check there is at least a subject argument
-if [ $# -lt 1 ]
-then
+if [ $# -lt 1 ]; then
   display_usage
   exit 1
 fi
@@ -161,8 +158,7 @@ fi
 # extract subject
 subject=$1
 outdir=$subject
-if [ -z ${envfile} ]
-then
+if [ -z ${envfile} ]; then
   envfile="${subject}.env"
 fi
 shift
@@ -178,18 +174,16 @@ fi
 mkdir -p reports/$subject
 
 # optionally start CSS
-if [ $subject == "css" ]
-then
+if [ $subject == "css" ]; then
   setup_css
   dockerargs+=('--env-file=css-creds.env' '--network=testnet')
   harnessargs+=('--skip-teardown')
 else
-  dockerargs+=("--env-file=$envfile")
+  dockerargs+=("--env-file=$envfile" "--network=network.sai")
 fi
 
 # optionally pull published CTH image
-if [[ ! $dockerimage == 'testharness' ]]
-then
+if [[ ! $dockerimage == 'testharness' ]]; then
   docker pull solidproject/conformance-test-harness
 fi
 
@@ -199,8 +193,7 @@ exit_code=$?
 echo "Exit code: $exit_code"
 
 # optionally stop CSS
-if [ $subject == "css" ]
-then
+if [ $subject == "css" ]; then
   stop_css
 fi
 
